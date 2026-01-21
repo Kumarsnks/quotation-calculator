@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @font-face {
+            font-family: "NotoSans";
+            src: url("NotoSans-Regular.ttf");
+        }
+
+        body {
+            font-family: NotoSans, Arial, sans-serif;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        h2 {
+            margin-top: 2px;
+            margin-bottom: 3px;
+            font-size:18px;
+            color: #1e40af;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 3px 4px;
+            text-align: center;
+            line-height: 0.8;
+            font-size: 10px;
+        }
+
+        th {
+            background-color: #e5e7eb;
+        }
+
+        .summary {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .header {
+            width: 100%;
+            height: 80px;
+            text-align: center;      /* 🔑 pushes content to extreme right */
+            padding-right: 20px;    /* page margin */
+        }
+
+        .logo {
+            height: 35px;           /* smaller */
+            max-width: 110px;
+            width: auto;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <img src="{{ logo_path }}" class="logo" alt="Logo">
+</div>
+
+<main>
+    <div style="position:relative; margin-top:5px; margin-bottom:8px;">
+        <h1 style="font-size:40px; text-align:center; margin:0; color:#1f3a8a;">
+            Quotation Report
+        </h1>
+
+        <div style="font-size:15px; color:#374151; text-align:right;">
+            <b>{{ generated_on }}</b>
+        </div>
+    </div>
+
+    <!-- About Us -->
+
+    <div>
+        <h2>About Us:</h2>
+
+        <p style="margin:3px; line-height:1.0;"><strong>An Industry Leading Provider of AI & Optimization
+            Solutions.</strong></p>
+        <p style="margin:3px; line-height:1.2; margin-bottom:5px;">ORMAE delivers "cutting-edge, cost-effective
+            Optimization & Data Science solutions" in diverse business
+            domains with direct impact on Revenues. We have helped 45+ clients across the globe including USA, Europe,
+            Middle-East & APAC. We serve large, mid & small enterprises including startups, with majority of our clients
+            being market leaders and unicorns. Our solutions are tailored to customer needs and able to solve the most
+            complex business process optimization satisfying all operational constraints. Our solution development and
+            implementation team are both skilled at software development and business domain knowledge. Our solutions
+            have already made an impact of saving millions of dollars in operational business processes of more than a
+            billion dollar sized organizations. We are among the few global companies who has all the three analytical
+            pillars-Data Science, Optimization and Advanced Analytics under the same umbrella and can provide a
+            holistic Optimization & Data Science solution.</p>
+    </div>
+
+    <!-- Quotation -->
+    <div>
+        <h2>Team Structure:</h2>
+
+        <p style="font-size:12px; margin:3px; line-height:1.2;"><b>Project Name:</b> {{ project_name }}</p>
+        {% if project_description %}
+        <p style="font-size:12px; margin:3px; line-height:1.2;"><b> Project Description:</b> {{ project_description }}
+        </p>
+        {% endif %}
+
+        <table style="width:100%; margin-top:8px; margin-bottom:5px;">
+            <tr>
+                <th>Role</th>
+                <th style="width:8%; text-align:center; white-space:normal; word-break:break-word;">Count</th>
+                <th style="width:8%; text-align:center; white-space:normal; word-break:break-word;">Hours</th>
+                <th style="width:12%; text-align:center; white-space:normal; word-break:break-word;">Rate/Hr</th>
+                <th style="width:18%;">Total Amount</th>
+            </tr>
+            {% for row in roles_data %}
+            <tr>
+                <td>{{ row.Role }}</td>
+                <td>{{ row.Count }}</td>
+                <td>{{ row.Hours }}</td>
+                <td>{{ currency_symbol }}{{ "{:,.0f}".format(row.Margin) }}</td>
+                <td>{{ currency_symbol }}{{ "{:,.0f}".format(row.Margin_Amount) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if milestone_data %}
+        <h2>Milestone Breakdown</h2>
+
+        <table style="width:100%; margin-top:1px;">
+            <tr>
+                <th style="width:15%;">Milestone Name</th>
+                <th>Description</th>
+                <th style="width:14%; text-align:center; white-space:normal; word-break:break-word;">Percentage %</th>
+                <th style="width:15%;">Amount</th>
+            </tr>
+            {% for m in milestone_data %}
+            <tr>
+                <td>{{ m.Name }}</td>
+                <td>{{ m.Description if m.Description else '-' }}</td>
+                <td>{{ m.Percentage }}</td>
+                <td>{{ currency_symbol }}{{ "{:,.0f}".format(m.Amount) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        <table cellspacing="0" cellpadding="2" style="width:160mm; margin-top:8px; margin-bottom:10px; font-size:11px;">
+            <tbody>
+            <tr style="width:30%;">
+                <td style="text-align:left; padding:3px; width:40%;">
+                    Total Resource Count
+                </td>
+                <td style="text-align:right; padding:3px; width:20%;">
+                    {{ "{:,.0f}".format(total_manpower) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align:left; padding:3px;">
+                    Total Project Duration
+                </td>
+                <td style="text-align:right; padding:3px;">
+                    {{ "{:,.0f}".format(total_project_hours) }} Hrs
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align:left; padding:3px;">
+                    Total Internal Cost
+                </td>
+                <td style="text-align:right; padding:3px;">
+                    {{ currency_symbol }}{{ "{:,.0f}".format(total_internal) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align:left; padding:3px;">
+                    Total Internal Cost + Total Overhead
+                </td>
+                <td style="text-align:right; padding:3px;">
+                    {{ currency_symbol }}{{ "{:,.0f}".format(total_final) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align:left; padding:3px;">
+                    Total Margin Cost
+                </td>
+                <td style="text-align:right; padding:3px;">
+                    {{ currency_symbol }}{{ "{:,.0f}".format(total_margin) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align:left; padding:3px;">
+                    Offered Discount
+                </td>
+                <td style="text-align:right; padding:3px;">
+                    {{ "{:,.0f}".format(discount_pct) }}%
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align:left; padding:3px;">
+                    Discounted Amount
+                </td>
+                <td style="text-align:right; padding:3px;">
+                    {{ currency_symbol }}{{ "{:,.0f}".format(discount_amount) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td style="
+                    font-size:12px;
+                    font-weight:600;
+                    border-top:1px solid #333;
+                    padding:4px;
+                    text-align:left;
+                ">
+                    Total Project Amount
+                </td>
+                <td style="
+                    text-align:right;
+                    font-weight:800;
+                    font-size:16px;
+                    color:#16a34a;
+                    border-top:1px solid #333;
+                    padding:4px;
+                ">
+                    {{ currency_symbol }}{{ "{:,.0f}".format(final_after_discount) }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Uploaded Documents -->
+    <div>
+        <h2>Uploaded Documents:</h2>
+
+        <p style="font-size: 10px; margin:0; line-height:1.2;"><b>
+            User Requirement Doc:</b>
+            {% if user_doc %}
+            <span style="color:green;">✔ Uploaded</span>
+            {% else %}
+            <span style="color:red;">✘ Not Uploaded</span>
+            {% endif %}
+        </p>
+
+        <p style="font-size: 10px; margin:0; line-height:1.0;"><b>
+            Functional Requirement Doc:</b>
+            {% if functional_doc %}
+            <span style="color:green;">✔ Uploaded</span>
+            {% else %}
+            <span style="color:red;">✘ Not Uploaded</span>
+            {% endif %}
+        </p>
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @font-face {
+            font-family: "NotoSans";
+            src: url("NotoSans-Regular.ttf");
+        }
+
+        body {
+            font-family: NotoSans, Arial, sans-serif;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 11pt;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 3px 4px;
+            text-align: center;
+            line-height: 1.0;
+        }
+
+        th {
+            background-color: #e5e7eb;
+        }
+
+        .summary {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        .section {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .header {
+            width: 100%;
+            height: 80px;
+            text-align: right;      /* 🔑 pushes content to extreme right */
+            padding-right: 20px;    /* page margin */
+        }
+
+        .logo {
+            height: 35px;           /* smaller */
+            max-width: 110px;
+            width: auto;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <img src="{{ logo_path }}" class="logo" alt="Logo">
+</div>
+
+<main>
+    <h1 style="text-align:center; font-size:40px; margin-top:5px;">
+        Quotation Report
+    </h1>
+
+    <!-- About Us -->
+
+    <div class="section">
+        <h2>About Us:</h2>
+
+        <p><strong>An Industry Leading Provider of AI & Optimization Solutions.</strong></p>
+        <p>
+            ORMAE delivers "cutting-edge, cost-effective Optimization & Data Science solutions" in diverse business
+            domains with direct impact on Revenues. We have helped 45+ clients across the globe including USA, Europe,
+            Middle-East & APAC. We serve large, mid & small enterprises including startups, with majority of our clients
+            being market leaders and unicorns. Our solutions are tailored to customer needs and able to solve the most
+            complex business process optimization satisfying all operational constraints. Our solution development and
+            implementation team are both skilled at software development and business domain knowledge. Our solutions
+            have already made an impact of saving millions of dollars in operational business processes of more than a
+            billion dollar sized organizations. We are among the few global companies who has all the three analytical
+            pillars-Data Science, Optimization and Advanced Analytics under the same umbrella and can provide a
+            holistic Optimization & Data Science solution.
+        </p>
+    </div>
+
+    <!-- Quotation -->
+    {% set section_no = 1 %}
+    <div class="section">
+        <h2>{{ section_no }}. Team Structure:</h2>
+        {% set section_no = section_no + 1 %}
+
+        <p style="font-size:12px;"><b>Project Name:</b> {{ project_name }}</p>
+        {% if project_description %}
+        <p style="font-size:12px; margin:1px 0;"><b>Description:</b> {{ project_description }}</p>
+        {% endif %}
+        <p style="font-size:12px; margin:1px 0;"><b>Total Resources:</b> {{ total_manpower }}</p>
+        <p style="font-size:12px; margin:1px 0;"><b>Timeline:</b> {{ total_project_hours }} Hrs (<b>{{ total_project_days }} Days</b>)
+        </p>
+
+
+        <table>
+            <tr>
+<!--                <th>Role</th>-->
+                <th style="width:8%; text-align:center; white-space:normal; word-break:break-word;">Count</th>
+                <th style="width:8%; text-align:center; white-space:normal; word-break:break-word;">Hours</th>
+<!--                <th style="width:12%; text-align:center; white-space:normal; word-break:break-word;">Rate/Hr</th>-->
+                <th>Total Amount</th>
+            </tr>
+            {% for row in roles_data %}
+            <tr>
+<!--                <td>{{ row.Role }}</td>-->
+                <td>{{ row.Count }}</td>
+                <td>{{ row.Hours }}</td>
+<!--                <td>{{ currency_symbol }}{{ "{:,.0f}".format(row.Margin) }}</td>-->
+                <td>{{ currency_symbol }}{{ "{:,.0f}".format(row.Margin_Amount) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if milestone_data %}
+        <h2>Milestone Breakdown</h2>
+
+        <table>
+            <tr>
+                <th>Milestone Name</th>
+                <th style="width:20%;">Description</th>
+                <th style="width:5%; text-align:center; white-space:normal; word-break:break-word;">Percentage %</th>
+                <th>Amount</th>
+            </tr>
+            {% for m in milestone_data %}
+            <tr>
+                <td>{{ m.Name }}</td>
+                <td>{{ m.Date if m.Date else '-' }}</td>
+                <td>{{ m.Percentage }}</td>
+                <td>{{ currency_symbol }}{{ "{:,.0f}".format(m.Amount) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+
+    <div class="summary">
+
+        {% if discount_pct > 0 %}
+        <p style="font-size:12px; margin:2px 0;"><b>Discount:</b> {{ discount_pct }}%</p>
+        <p style="font-size:12px; margin:2px 0;"><b>Discounted Amount:</b> {{ currency_symbol }}{{ "{:,.0f}".format(total_margin *
+            discount_pct / 100) }}</p>
+        {% endif %}
+
+        <p style="font-size:20px; text-align: left;"><b>Final Amount:</b> {{ currency_symbol }}{{
+            "{:,.0f}".format(final_after_discount) }}</p>
+
+    </div>
+
+    <!-- Uploaded Documents -->
+    <div class="section">
+        <h2>{{ section_no }}. Uploaded Documents:</h2>
+        {% set section_no = section_no + 1 %}
+
+        <p style="font-size: 12px; margin:2px 0;"><b>
+            User Requirement Doc:</b>
+            {% if user_doc %}
+            <span style="color:green;">✔ Uploaded</span>
+            {% else %}
+            <span style="color:red;">✘ Not Uploaded</span>
+            {% endif %}
+        </p>
+
+        <p style="font-size: 12px; margin:2px 0;"><b>
+            Functional Requirement Doc:</b>
+            {% if functional_doc %}
+            <span style="color:green;">✔ Uploaded</span>
+            {% else %}
+            <span style="color:red;">✘ Not Uploaded</span>
+            {% endif %}
+        </p>
+    </div>
+
+</main>
+
+</body>
+</html>
