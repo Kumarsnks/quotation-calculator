@@ -8,7 +8,6 @@ import os
 from datetime import datetime
 import math
 from jinja2 import Environment, FileSystemLoader
-from PyPDF2 import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
